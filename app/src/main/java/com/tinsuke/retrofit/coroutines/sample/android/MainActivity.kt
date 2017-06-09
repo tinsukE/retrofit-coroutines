@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import com.tinsuke.retrofit.coroutines.experimental.CoroutinesCallAdapterFactory
 import com.tinsuke.retrofit.coroutines.sample.android.model.WeatherData
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
 import okhttp3.OkHttpClient
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         // Using coroutines
-        launch(AndroidMainContext) {
+        launch(UI) {
             try {
                 // This will already start the request in a NetworkPool thread
                 val request = service.getWeatherDataCoroutine(getString(R.string.owm_api_key), "Amsterdam")
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Using coroutines with a Response<> return type
-        launch(AndroidMainContext) {
+        launch(UI) {
             try {
                 // This will already start the request in a NetworkPool thread
                 val request = service.getWeatherDataCoroutineResponse(getString(R.string.owm_api_key), "Amsterdam")
