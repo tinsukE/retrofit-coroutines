@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Retrofit Coroutines</string>
+    <string name="owm_api_key">API_KEY</string>
+</resources>
