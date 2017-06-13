@@ -14,7 +14,7 @@ interface GitHubService {
 
 And then call your service with:
 ```kotlin
-suspend(YourCoroutineContext) {
+launch(YourCoroutineContext) {
     try {
         val request = gitHubService.listRepos("tinsukE")
         val repos = request.await()
@@ -30,7 +30,7 @@ suspend(YourCoroutineContext) {
 ## But, why?
 The beauty of using coroutines for your requests is to improve code readability in cases when you need to combine data from different sources in parallel:
 ```kotlin
-suspend(YourCoroutineContext) {
+launch(YourCoroutineContext) {
     try {
         val requestA = myService.getA()
         val requestB = myService.getB()
@@ -46,7 +46,7 @@ suspend(YourCoroutineContext) {
 
 Or sequentially:
 ```kotlin
-suspend(YourCoroutineContext) {
+launch(YourCoroutineContext) {
     try {
         val list = myService.getList().await()
         val secondaryRequests = list.map { myService.getSpecificInformation(element.id) }
