@@ -90,7 +90,7 @@ and add the dependency:
 ```gradle
 dependencies {
   ...
-  compile 'com.github.tinsukE:retrofit-coroutines:0.2'
+  compile 'com.github.tinsukE:retrofit-coroutines:0.3'
   ...
 }
 ```
