@@ -44,16 +44,16 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<WeatherData>, response: Response<WeatherData>) {
                 if (response.isSuccessful) {
                     val data = response.body()
-                    callTextView.setText("It works.\nWeather in ${data.name}: ${data.weather.first().description}")
+                    callTextView.text = "It works.\nWeather in ${data.name}: ${data.weather.first().description}"
                 } else {
-                    callTextView.setText("Oh no, a non-2XX HTTP response! $response")
+                    callTextView.text = "Oh no, a non-2XX HTTP response! $response"
                 }
             }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
                 when (t) {
-                    is IOException -> callTextView.setText("Oh no, a networking or conversion error! ${t.localizedMessage}")
-                    else -> callTextView.setText("Oh no, an unknown error! ${t.localizedMessage}")
+                    is IOException -> callTextView.text = "Oh no, a networking or conversion error! ${t.localizedMessage}"
+                    else -> callTextView.text = "Oh no, an unknown error! ${t.localizedMessage}"
                 }
             }
         })
@@ -66,13 +66,13 @@ class MainActivity : AppCompatActivity() {
                 // But execution only blocks on await()
                 val data = request.await()
                 // From now on we are in a CommonPool thread
-                coroutineTextView.setText("It works via coroutines too!\nWeather in ${data.name}: ${data.weather.first().description}")
+                coroutineTextView.text = "It works via coroutines too!\nWeather in ${data.name}: ${data.weather.first().description}"
             } catch (exception: HttpException) {
-                coroutineTextView.setText("Oh no, a non-2XX HTTP response! ${exception.localizedMessage}")
+                coroutineTextView.text = "Oh no, a non-2XX HTTP response! ${exception.localizedMessage}"
             } catch (exception: IOException) {
-                coroutineTextView.setText("Oh no, a networking or conversion error! ${exception.localizedMessage}")
+                coroutineTextView.text = "Oh no, a networking or conversion error! ${exception.localizedMessage}"
             } catch (exception: Throwable) {
-                coroutineTextView.setText("Oh no, an unknown error! ${exception.localizedMessage}")
+                coroutineTextView.text = "Oh no, an unknown error! ${exception.localizedMessage}"
             }
         }
 
@@ -86,14 +86,14 @@ class MainActivity : AppCompatActivity() {
                 // From now on we are in a CommonPool thread
                 if (response.isSuccessful) {
                     val data = response.body()
-                    coroutineResponseTextView.setText("It works via coroutines with response too!\nWeather in ${data.name}: ${data.weather.first().description}")
+                    coroutineResponseTextView.text = "It works via coroutines with response too!\nWeather in ${data.name}: ${data.weather.first().description}"
                 } else {
-                    coroutineResponseTextView.setText("Oh no, a non-2XX HTTP response! $response")
+                    coroutineResponseTextView.text = "Oh no, a non-2XX HTTP response! $response"
                 }
             } catch (exception: IOException) {
-                coroutineResponseTextView.setText("Oh no, a networking or conversion error! ${exception.localizedMessage}")
+                coroutineResponseTextView.text = "Oh no, a networking or conversion error! ${exception.localizedMessage}"
             } catch (exception: Throwable) {
-                coroutineResponseTextView.setText("Oh no, an unknown error! ${exception.localizedMessage}")
+                coroutineResponseTextView.text = "Oh no, an unknown error! ${exception.localizedMessage}"
             }
         }
     }
