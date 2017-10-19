@@ -72,6 +72,8 @@ If you'd like to have more control over the `CoroutineContext` used by the adapt
 
 You can also use `Deferred<Response<YourModel>>` as the return type for the Retrofit interface functions if you'd rather deal with a `Response<>` instance instead of cathing for `HttpException`.
 
+If you want to have more control over how the `Call` gets executed, you can provide a `CoroutinesInterceptor` when creating the adapter factory. Bear in mind that, for most use cases, having an OkHttp `Interceptor` instead is a better solution.
+
 Working examples can be found in the sample project [app][5].
 
 ## Setup
