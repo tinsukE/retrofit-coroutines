@@ -9,13 +9,14 @@ import java.lang.reflect.Type
 import kotlin.coroutines.experimental.CoroutineContext
 
 internal class CoroutinesResponseCallAdapter(private val context: CoroutineContext,
-                                             private val responseType: Type) : CallAdapter<Any, Deferred<Response<Any>>> {
+                                             private val responseType: Type,
+                                             private val executor: CoroutinesExecutor) : CallAdapter<Any, Deferred<Response<Any>>> {
 
     override fun responseType() = responseType
 
     override fun adapt(call: Call<Any>): Deferred<Response<Any>> {
         return async(context) {
-            call.execute()
+            executor.execute(call)
         }.apply {
             invokeOnCompletion {
                 if (isCancelled) {

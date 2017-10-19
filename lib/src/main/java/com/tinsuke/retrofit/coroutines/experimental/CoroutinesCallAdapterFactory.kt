@@ -2,6 +2,7 @@ package com.tinsuke.retrofit.coroutines.experimental
 
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -9,7 +10,18 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.coroutines.experimental.CoroutineContext
 
-class CoroutinesCallAdapterFactory private constructor(private val context: CoroutineContext) : CallAdapter.Factory() {
+class CoroutinesCallAdapterFactory private constructor(private val context: CoroutineContext,
+                                                       interceptor: CoroutinesInterceptor?) : CallAdapter.Factory() {
+
+    private val executor = object : CoroutinesExecutor {
+        override fun execute(call: Call<Any>): Response<Any> {
+            return if (interceptor == null) {
+                call.execute()
+            } else {
+                interceptor.intercept(call)
+            }
+        }
+    }
 
     override fun get(returnType: Type?, annotations: Array<out Annotation>?, retrofit: Retrofit?): CallAdapter<*, *>? {
         val rawType = getRawType(returnType)
@@ -30,9 +42,9 @@ class CoroutinesCallAdapterFactory private constructor(private val context: Coro
             }
             val responseType = getParameterUpperBound(0, deferredType)
 
-            return CoroutinesResponseCallAdapter(context, responseType)
+            return CoroutinesResponseCallAdapter(context, responseType, executor)
         } else {
-            return CoroutinesCallAdapter(context, deferredType)
+            return CoroutinesCallAdapter(context, deferredType, executor)
         }
     }
 
@@ -42,8 +54,9 @@ class CoroutinesCallAdapterFactory private constructor(private val context: Coro
     }
 
     companion object {
-        fun create(context: CoroutineContext = newFixedThreadPoolContext(5, "Network-Coroutines")): CoroutinesCallAdapterFactory {
-            return CoroutinesCallAdapterFactory(context)
+        fun create(context: CoroutineContext = newFixedThreadPoolContext(5, "Network-Coroutines"),
+                   interceptor: CoroutinesInterceptor? = null): CoroutinesCallAdapterFactory {
+            return CoroutinesCallAdapterFactory(context, interceptor)
         }
     }
 

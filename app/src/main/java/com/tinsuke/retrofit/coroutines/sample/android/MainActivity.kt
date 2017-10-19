@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import com.tinsuke.retrofit.coroutines.experimental.CoroutinesCallAdapterFactory
+import com.tinsuke.retrofit.coroutines.experimental.CoroutinesInterceptor
 import com.tinsuke.retrofit.coroutines.sample.android.model.WeatherData
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -26,8 +27,24 @@ class MainActivity : AppCompatActivity() {
 
         val networkPool = newFixedThreadPoolContext(5, "Network")
 
+        val interceptor = object : CoroutinesInterceptor {
+            override fun intercept(call: Call<Any>): Response<Any> {
+                val response = call.execute()
+                if (!response.isSuccessful) {
+                    return response
+                }
+
+                val body = response.body()
+                if (body is WeatherData) {
+                    return Response.success(body.copy(name = body.name.toUpperCase()))
+                }
+
+                return response
+            }
+        }
+
         val retrofit = Retrofit.Builder()
-                .addCallAdapterFactory(CoroutinesCallAdapterFactory.create(networkPool))
+                .addCallAdapterFactory(CoroutinesCallAdapterFactory.create(networkPool, interceptor))
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("http://api.openweathermap.org/data/2.5/")
                 .client(OkHttpClient.Builder()
