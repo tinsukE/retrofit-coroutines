@@ -1,5 +1,11 @@
 # retrofit-coroutines
 
+## DEPRECATED
+
+This project is discontinued and I recommend you use [Jake Wharton's version of an adapter](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter) that basically does the same thing, in a better way:
+
+https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
+
 ## Introduction
 
 A [Retrofit][1] Call adapter for [Kotlin][2] [Coroutines][3]
